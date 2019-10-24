@@ -1,3 +1,3 @@
 #!/bin/bash
 cd /code
-jupyter lab --ip 0.0.0.0
+jupyter lab --ip 0.0.0.0 --allow-root
