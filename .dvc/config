@@ -1,4 +1,4 @@
 ['remote "ssd"']
-url = /data/ssd/dsb2019_dvc
+url = /ssd/data/dsb2019_dvc
 [core]
 remote = ssd
