@@ -1,0 +1,19 @@
+version: '2.1'
+networks:
+  default: # to make compose work together with openvpn on linux
+    ipam:
+      config:
+        - subnet: 10.155.0.0/24
+          gateway: 10.155.0.1
+services:
+ lab:
+   container_name: lab
+   image: gcr.io/kaggle-images/python
+   command: /code/run_lab.sh
+   volumes:
+     - ./:/code
+     - $DATA_DIR:/data
+   expose:
+     - "8888"
+   ports:
+     - "8888:8888"

@@ -116,4 +116,4 @@ deployment/ansible/Vagrantfile
 # Node
 node_modules/
 dist/
-widget/
+widget/q
