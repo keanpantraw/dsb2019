@@ -2,3 +2,5 @@
 url = /ssd/data/dsb2019_dvc
 [core]
 remote = ssd
+['remote "devbox"']
+url = ../25.102.20.218:/ssd/data/dsb2019_dvc
