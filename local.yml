@@ -8,7 +8,7 @@ networks:
 services:
  lab:
    container_name: lab
-   build: .
+   build: ./dsb2019/dsb2019
    command: /code/run_lab.sh
    volumes:
      - ./:/code
