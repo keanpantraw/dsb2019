@@ -12,7 +12,6 @@ services:
    command: /code/run_lab.sh
    volumes:
      - ./:/code
-     - $DATA_DIR:/data
    expose:
      - "8888"
    ports:
