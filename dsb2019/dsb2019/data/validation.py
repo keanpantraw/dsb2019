@@ -12,7 +12,7 @@ class Predict(NamedTuple):
 
 
 class InstallationFold(GroupKFold):
-    def __init__(self, n_splits=10, installation_ids=None):
+    def __init__(self, n_splits=5, installation_ids=None):
         super().__init__(n_splits=n_splits)
         self.installation_ids = installation_ids
 
@@ -36,6 +36,7 @@ def fit_fold(df, train_ix, test_ix, make_features, train_model, make_predictions
 
 def cross_validate(train, labels, make_features, train_model, make_predictions, cv=None):
     predicts = []
+    np.random.seed(2019)
     cv = InstallationFold() if cv is None else cv
     for ix_train, ix_test in cv.split(train, labels, train.installation_id.values):
         predicts.append(fit_fold(train, ix_train, ix_test, make_features, train_model, make_predictions))

@@ -17,11 +17,12 @@ def track_experiment(name: str, mean_score: float, cv_scores: np.array, notebook
         tracking_df = pd.read_csv(TRACKING_FILE)
         if list(tracking_df.columns) != list(experiment.columns):
             raise RuntimeError("Tracking schema changed!")
-        experiment_mask = tracking_df.name.isin([name]) 
+        experiment_mask = tracking_df.name==name 
         if experiment_mask.sum() > 0:
-            tracking_df[experiment_mask] = experiment
+            experiment.index = tracking_df.index[experiment_mask]
+            tracking_df.update(experiment)
         else:
-            tracking_df.append(experiment)
+            tracking_df = tracking_df.append(experiment, ignore_index=True)
     else:
         tracking_df = experiment
     tracking_df.to_csv(TRACKING_FILE, index=False)
