@@ -11,9 +11,18 @@ services:
    container_name: lab
    build: ./dsb2019/dsb2019
    command: /code/run_lab.sh
+   environment:
+    - LOCAL_LAB_ENV=1
    volumes:
      - ./:/code
    expose:
      - "8888"
    ports:
      - "8888:8888"
+ tests:
+   user: $UID
+   container_name: tests
+   build: ./dsb2019/dsb2019
+   command: /code/run_tests.sh
+   volumes:
+     - ./:/code

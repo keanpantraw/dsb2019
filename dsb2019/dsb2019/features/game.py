@@ -13,12 +13,12 @@ def calculate_ratios(df):
     return n_correct, n_incorrect, ratio
 
 
-def assessment_title(df):
-    assessment_title=df.title.iloc[-1]    
+def assessment_title(df, assessment):
+    assessment_title=assessment.title    
     return {"title": games.index(assessment_title)}
 
 
-def make_move_stats(df, title="", n_lags=2):
+def make_move_stats(df, assessment, title="", n_lags=2):
     if "correct" in df.columns:
         df["correct_move"] = df.correct == True
         df["wrong_move"] = df.correct == False

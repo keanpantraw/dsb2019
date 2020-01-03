@@ -19,9 +19,26 @@ def unwrap_event_data(df):
 
 
 def process_test_installations(test, process_log):
-    test_labels = test[["game_session", "title", "installation_id"]].drop_duplicates()
-    test_labels["accuracy_group"] = None
+    test_labels = prepare_test_labels(test)
     return process_installations(test_labels, test, process_log)
+
+
+def process_test_installations_single(test, process_log):
+    test_labels = prepare_test_labels(test)
+    return process_installations_single(test_labels, test, process_log)
+
+
+def prepare_test_labels(test):
+    if "accuracy_group" not in test:
+        test["accuracy_group"] = None
+    index = {}
+    df = test[["installation_id", "game_session", "timestamp"]].sort_values(["installation_id", "timestamp"])
+    for i, installation_id, game_session, timestamp in df.itertuples():
+        index[installation_id] = game_session
+    installations, sessions = zip(*index.items())
+    index = pd.DataFrame(data={"installation_id": installations, "game_session": sessions})
+    return pd.merge(index, test[["game_session", "title", "installation_id", "accuracy_group"]].drop_duplicates(), 
+                    on=["installation_id", "game_session"])
 
 
 def process_installations(train_labels, train, process_log, n_installations_in_chunk=100, n_jobs=None):
@@ -70,6 +87,7 @@ def tqdm_joblib(tqdm_object):
 def process_installations_single(train_labels, train, process_log, position=1):
     result = []
     train = train.sort_values("timestamp")
+    train["timestamp"] = pd.to_datetime(train.timestamp)
     installations = train.groupby("installation_id")
     for i, game_session, title, installation_id, accuracy_group in tqdm(train_labels[["game_session", "title", "installation_id", "accuracy_group"]].itertuples(), 
                                                               total=len(train_labels), position=position, desc=f"Processing chunk {position}"):
@@ -93,12 +111,13 @@ class LogProcessor:
         self.game_features = game_features
 
     def __call__(self, df):
+        assessment = df.iloc[-1]
         history = df.iloc[:-1]
         history = history[history.type.isin(["Game", "Assessment"])].copy()
         
         result = {}
         for func in self.global_features:
-            result.update(func(df))
+            result.update(func(df, assessment))
         for game in games:
             game_feature_funcs = self.game_features.get(game, [])
             if game_feature_funcs:
@@ -106,5 +125,11 @@ class LogProcessor:
                 if len(game_info):
                     game_info = unwrap_event_data(game_info)
                 for func in game_feature_funcs:
-                    result.update(func(game_info))
+                    result.update(func(game_info, assessment))
         return result
+
+
+def with_prefix(func, prefix):
+    def f(df, assessment):
+        return {f"{prefix}_{k}": v for k, v in func(df, assessment).items()}
+    return f
