@@ -1,0 +1,1 @@
+{"feature_fraction": 0.67, "lambda_l1": 0.9431992357093691, "lambda_l2": 0.2004387038895958, "learning_rate": 0.01, "max_depth": 13, "metric": "rmse", "n_estimators": 10000, "num_leaves": 31, "objective": "rmse", "random_state": 2019, "subsample": 0.68}
