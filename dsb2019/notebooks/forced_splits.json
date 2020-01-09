@@ -1,0 +1,1 @@
+{"feature": "title", "threshold": 1.9, "left": {"feature": "title", "threshold": 0.9}, "right": {"feature": "title", "threshold": 2.9, "right": {"feature": "title", "threshold": 3.9}}}

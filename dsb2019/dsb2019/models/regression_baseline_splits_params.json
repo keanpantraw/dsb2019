@@ -1,0 +1,1 @@
+{"feature_fraction": 0.97, "forced_splits": "forced_splits.json", "lambda_l1": 0.700133303634339, "lambda_l2": 0.47503367833177956, "learning_rate": 0.025, "max_depth": 7, "metric": "rmse", "n_estimators": 10000, "num_leaves": 127, "objective": "rmse", "random_state": 2019, "subsample": 0.51}
