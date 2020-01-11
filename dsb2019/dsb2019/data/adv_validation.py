@@ -54,7 +54,7 @@ class AdversarialValidator:
         return roc_auc_score(self.data_.y_test, self.model_.predict(self.data_.x_test))
     
     def lgb_important_features(self):
-        return lgb.plot_importance(self.model_)
+        return lgb.plot_importance(self.model_, max_num_features=20)
 
     def shap_important_features(self):
         shap_values = shap.TreeExplainer(self.model_).shap_values(self.data_.x_test)
