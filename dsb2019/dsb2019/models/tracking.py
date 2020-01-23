@@ -25,7 +25,7 @@ def track_experiment(name: str, mean_score: float, cv_scores: np.array, notebook
             tracking_df = tracking_df.append(experiment, ignore_index=True)
     else:
         tracking_df = experiment
-    tracking_df.to_csv(TRACKING_FILE, index=False)
+    tracking_df.to_csv(str(TRACKING_FILE), index=False)
     return tracking_df
 
 
@@ -38,5 +38,5 @@ def track_submission_info(name: str, submission_path: str, submission_score: flo
         raise RuntimeError(f"Experiment {name} wasn't tracked")
     tracking_df.loc[experiment_mask, "submission_path"] = submission_path
     tracking_df.loc[experiment_mask, "submission_score"] = submission_score
-    tracking_df.to_csv(TRACKING_FILE, index=False)
+    tracking_df.to_csv(str(TRACKING_FILE), index=False)
     return tracking_df

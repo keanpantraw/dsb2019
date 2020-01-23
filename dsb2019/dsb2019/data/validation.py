@@ -26,21 +26,24 @@ class InstallationFold(GroupKFold):
 
 
 def fit_fold(df, train_ix, test_ix, make_features, train_model, make_predictions):
-    train = df.iloc[train_ix].reset_index().copy()
-    test = df.iloc[test_ix].reset_index().copy()
+    train = df.iloc[train_ix].copy()
+    test = df.iloc[test_ix].copy()
     train_features, test_features = make_features(train, test)
     model = train_model(*train_features)
     test_pred, test_true = make_predictions(model, *test_features)
-    return Predict(test_true, test_pred)
+    return Predict(test_true, test_pred), model
 
 
 def cross_validate(train, labels, make_features, train_model, make_predictions, cv=None):
     predicts = []
+    models = []
     np.random.seed(2019)
     cv = InstallationFold() if cv is None else cv
     for ix_train, ix_test in cv.split(train, labels, train.installation_id.values):
-        predicts.append(fit_fold(train, ix_train, ix_test, make_features, train_model, make_predictions))
-    return predicts
+        predict, model = fit_fold(train, ix_train, ix_test, make_features, train_model, make_predictions)
+        predicts.append(predict)
+        models.append(model)
+    return predicts, models
 
 
 quad_kappa = partial(cohen_kappa_score, weights="quadratic")
